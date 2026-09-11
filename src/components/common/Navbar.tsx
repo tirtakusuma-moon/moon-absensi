@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import PortalKaryawan from './PortalKaryawan';
-import DashboardAdmin from './DashboardAdmin';
+import PortalKaryawan from '../karyawan/PortalKaryawan';
+import DashboardAdmin from '../admin/DashboardAdmin';
 
 interface NavbarProps {
   namaPerusahaan?: string;
