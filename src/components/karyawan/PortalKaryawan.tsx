@@ -12,7 +12,7 @@ export default function PortalKaryawan() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [kameraAktif, setKameraAktif] = useState(false);
 
-  // 1. Nyalakan Kamera untuk Selfie
+  // Nyalakan Kamera untuk Selfie
   const mulaiKamera = async () => {
     setKameraAktif(true);
     try {
@@ -26,7 +26,7 @@ export default function PortalKaryawan() {
     }
   };
 
-  // 2. Ambil Foto (Snapshot) dari Kamera
+  // Ambil Foto (Snapshot) dari Kamera
   const ambilFoto = () => {
     if (videoRef.current && canvasRef.current) {
       const video = videoRef.current;
@@ -39,7 +39,6 @@ export default function PortalKaryawan() {
         const dataURL = canvas.toDataURL('image/jpeg');
         setFotoSelfie(dataURL);
 
-        // Matikan stream kamera setelah foto terambil
         const stream = video.srcObject as MediaStream;
         if (stream) {
           stream.getTracks().forEach(track => track.stop());
@@ -49,7 +48,7 @@ export default function PortalKaryawan() {
     }
   };
 
-  // 3. Absen Masuk
+  // Absen Masuk
   const handleAbsenMasuk = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!idKaryawan || !nama) {
@@ -88,7 +87,7 @@ export default function PortalKaryawan() {
     }
   };
 
-  // 4. Absen Pulang
+  // Absen Pulang
   const handleAbsenPulang = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!idKaryawan) {
@@ -131,47 +130,49 @@ export default function PortalKaryawan() {
 
   return (
     <div style={{ background: '#fff', padding: '30px', borderRadius: '16px', maxWidth: '420px', margin: '40px auto', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-      <h2 style={{ color: '#0f172a', marginBottom: '16px', textAlign: 'center' }}>📸 Portal Absensi Selfie</h2>
+      <h2 style={{ color: '#0f172a', marginBottom: '20px', textAlign: 'center', fontSize: '20px', fontWeight: 'bold' }}>
+        📷 Portal Absensi Selfie
+      </h2>
       
-      <form style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <form style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
         <input 
           type="text" 
           placeholder="ID Karyawan (Contoh: EMP-001)..." 
           value={idKaryawan} 
           onChange={e => setIdKaryawan(e.target.value)} 
-          style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} 
+          style={{ padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px' }} 
         />
         <input 
           type="text" 
           placeholder="Nama Lengkap..." 
           value={nama} 
           onChange={e => setNama(e.target.value)} 
-          style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} 
+          style={{ padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px' }} 
         />
 
-        {/* Pengganti Vermuk: Kamera Selfie */}
-        <div style={{ margin: '10px 0', textAlign: 'center', background: '#f8fafc', padding: '12px', borderRadius: '8px', border: '1px dashed #cbd5e1' }}>
+        {/* Kotak Kamera Selfie dengan gaya seperti vermuk */}
+        <div style={{ margin: '6px 0', textAlign: 'center', background: '#f8fafc', padding: '16px', borderRadius: '10px', border: '1px dashed #94a3b8' }}>
           {kameraAktif ? (
             <div>
-              <video ref={videoRef} autoPlay playsInline style={{ width: '100%', borderRadius: '8px', background: '#000', maxHeight: '220px' }} />
-              <button type="button" onClick={ambilFoto} style={{ background: '#0284c7', color: '#fff', padding: '8px 16px', border: 'none', borderRadius: '6px', marginTop: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
-                📸 Ambil Foto Selfie
+              <video ref={videoRef} autoPlay playsInline style={{ width: '100%', borderRadius: '8px', background: '#000', maxHeight: '200px', objectFit: 'cover' }} />
+              <button type="button" onClick={ambilFoto} style={{ background: '#0284c7', color: '#fff', padding: '8px 16px', border: 'none', borderRadius: '6px', marginTop: '10px', cursor: 'pointer', fontWeight: 'bold', fontSize: '13px' }}>
+                📸 Ambil Foto Sekarang
               </button>
             </div>
           ) : (
             <div>
               {fotoSelfie ? (
                 <div>
-                  <img src={fotoSelfie} alt="Preview Selfie" style={{ width: '90px', height: '90px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #059669' }} />
-                  <p style={{ fontSize: '12px', color: '#059669', fontWeight: 'bold', margin: '6px 0' }}>Foto Selfie Siap Dikirim</p>
-                  <button type="button" onClick={mulaiKamera} style={{ background: '#64748b', color: '#fff', padding: '6px 12px', border: 'none', borderRadius: '6px', fontSize: '12px', cursor: 'pointer' }}>
+                  <img src={fotoSelfie} alt="Preview Selfie" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #059669', marginBottom: '6px' }} />
+                  <p style={{ fontSize: '12px', color: '#059669', fontWeight: 'bold', margin: '4px 0' }}>✔ Foto Selfie Berhasil Diambil</p>
+                  <button type="button" onClick={mulaiKamera} style={{ background: '#64748b', color: '#fff', padding: '5px 10px', border: 'none', borderRadius: '6px', fontSize: '11px', cursor: 'pointer' }}>
                     Ulangi Foto
                   </button>
                 </div>
               ) : (
                 <div>
-                  <p style={{ fontSize: '13px', color: '#475569', marginBottom: '8px' }}>Verifikasi kehadiran wajib foto selfie:</p>
-                  <button type="button" onClick={mulaiKamera} style={{ background: '#0f172a', color: '#fff', padding: '10px 16px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
+                  <p style={{ fontSize: '13px', color: '#475569', marginBottom: '10px' }}>Verifikasi kehadiran wajib foto selfie:</p>
+                  <button type="button" onClick={mulaiKamera} style={{ background: '#0f172a', color: '#fff', padding: '10px 18px', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', fontSize: '13px' }}>
                     Buka Kamera untuk Selfie
                   </button>
                 </div>
@@ -181,22 +182,23 @@ export default function PortalKaryawan() {
           <canvas ref={canvasRef} style={{ display: 'none' }} />
         </div>
 
-        <div style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
+        {/* Tombol Absen Masuk & Pulang Berdampingan */}
+        <div style={{ display: 'flex', gap: '12px', marginTop: '6px' }}>
           <button 
             type="button" 
             onClick={handleAbsenMasuk} 
             disabled={loading}
-            style={{ flex: 1, background: '#059669', color: '#fff', border: 'none', padding: '12px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
+            style={{ flex: 1, background: '#059669', color: '#fff', border: 'none', padding: '12px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px' }}
           >
-            {loading ? 'Memproses...' : 'Absen Masuk'}
+            {loading ? '...' : 'Absen Masuk'}
           </button>
           <button 
             type="button" 
             onClick={handleAbsenPulang} 
             disabled={loading}
-            style={{ flex: 1, background: '#dc2626', color: '#fff', border: 'none', padding: '12px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
+            style={{ flex: 1, background: '#dc2626', color: '#fff', border: 'none', padding: '12px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '14px' }}
           >
-            {loading ? 'Memproses...' : 'Absen Pulang'}
+            {loading ? '...' : 'Absen Pulang'}
           </button>
         </div>
       </form>
