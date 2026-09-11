@@ -263,9 +263,14 @@ export default function DashboardAdmin() {
         <button onClick={handleLogoutAdmin} style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>Keluar (Logout)</button>
       </div>
 
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
-        <button onClick={handleExportExcel} style={{ background: '#059669', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}>Export Database ke Excel (.csv)</button>
-      </div>
+     <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', flexWrap: 'wrap' }}>
+  <button onClick={handleExportExcel} style={{ background: '#059669', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}>
+    Export Database ke Excel (.csv)
+  </button>
+  <button onClick={handleExportAbsensiExcel} style={{ background: '#0284c7', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}>
+     Export Laporan Absensi ke Excel (.csv)
+  </button>
+</div>
 
       <h3 style={{ fontSize: '15px', color: '#475569', marginBottom: '12px' }}>Daftar Seluruh Akun yang Mendaftar di Sistem</h3>
       <div style={{ overflowX: 'auto', maxHeight: '350px', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
