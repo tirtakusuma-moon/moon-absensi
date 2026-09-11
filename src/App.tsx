@@ -76,14 +76,16 @@ export default function App() {
     <div style={{ 
       position: 'relative', 
       minHeight: '100vh', 
-      // Latar belakang bertema malam bulan purnama sakura (Gambar 3)
-      backgroundImage: `linear-gradient(rgba(30, 10, 40, 0.55), rgba(15, 20, 35, 0.7)), url('/sakura-moon.jpg')`, 
+      width: '100%',
+      backgroundImage: `linear-gradient(rgba(30, 10, 40, 0.4), rgba(15, 20, 35, 0.6)), url('/sakura-moon.jpg')`, 
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundAttachment: 'fixed',
       fontFamily: 'Arial, sans-serif', 
       color: '#f8fafc', 
-      overflowX: 'hidden' 
+      overflowX: 'hidden',
+      margin: 0,
+      padding: 0
     }}>
       
       {/* Canvas Efek Daun/Kelopak Sakura Berguguran (Gambar 2) */}
