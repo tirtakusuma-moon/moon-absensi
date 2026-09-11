@@ -1,26 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../supabaseClient';
 
-const { error } = await supabase.from('karyawan').insert([
-  { 
-    id_karyawan: regId, 
-    nama: regNama, 
-    jabatan: regJabatan, 
-    email: regEmail, 
-    pin: regPin, 
-    tempat_lahir: regTempatLahir,
-    tanggal_lahir: regTanggalLahir,
-    bulan: regBulanLahir,
-    tahun_lahir: regTahunLahir,
-    nik_ktp: regNik,                  // <--- Tambahkan
-    nama_ibu_kandung: regIbu,         // <--- Tambahkan
-    no_telp: regTelp,                 // <--- Tambahkan
-    alamat_rumah: regAlamat,          // <--- Tambahkan
-    nama_rekening: regBank,           // <--- Tambahkan
-    no_rekening: regNoRek,            // <--- Tambahkan
-    gaji_pokok: 4500000 
-  }
-]);
+interface Karyawan {
+  id: string;
+  id_karyawan: string;
+  nama: string;
+  jabatan: string;
+  email?: string;
+  pin?: string;
+  tempat_lahir?: string;
+  tanggal_lahir?: string;
+  bulan?: string;
+  tahun_lahir?: string;
+  gaji_pokok?: number;
 }
 
 export default function PortalKaryawan() {
@@ -39,6 +31,13 @@ export default function PortalKaryawan() {
   const [regTanggalLahir, setRegTanggalLahir] = useState('');
   const [regBulanLahir, setRegBulanLahir] = useState('');
   const [regTahunLahir, setRegTahunLahir] = useState('');
+  
+  const [regNik, setRegNik] = useState('');
+  const [regIbu, setRegIbu] = useState('');
+  const [regTelp, setRegTelp] = useState('');
+  const [regAlamat, setRegAlamat] = useState('');
+  const [regBank, setRegBank] = useState('');
+  const [regNoRek, setRegNoRek] = useState('');
 
   const [loading, setLoading] = useState(false);
   const [lupaEmail, setLupaEmail] = useState('');
@@ -80,7 +79,6 @@ export default function PortalKaryawan() {
       }
     } catch (err) {
       console.error("Gagal akses kamera:", err);
-      alert("Tidak dapat mengakses kamera. Pastikan izin kamera di browser Anda diaktifkan.");
     }
   };
 
@@ -103,7 +101,7 @@ export default function PortalKaryawan() {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const dataURL = canvas.toDataURL('image/jpeg');
         setFotoSnapshot(dataURL);
-        alert('Foto berhasil diambil!');
+        alert('Foto selfie berhasil diambil!');
       }
     }
   };
@@ -135,7 +133,7 @@ export default function PortalKaryawan() {
   const handleDaftarKaryawan = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!regId || !regNama || !regJabatan || !regEmail || !regPin || !regTempatLahir || !regTanggalLahir || !regBulanLahir || !regTahunLahir) {
-      alert('Semua kolom wajib diisi!');
+      alert('Semua kolom utama wajib diisi!');
       return;
     }
     if (!regEmail.includes('@gmail.com')) {
@@ -161,6 +159,12 @@ export default function PortalKaryawan() {
         tanggal_lahir: regTanggalLahir,
         bulan: regBulanLahir,
         tahun_lahir: regTahunLahir,
+        nik_ktp: regNik,
+        nama_ibu_kandung: regIbu,
+        no_telp: regTelp,
+        alamat_rumah: regAlamat,
+        nama_rekening: regBank,
+        no_rekening: regNoRek,
         gaji_pokok: 4500000 
       }
     ]);
@@ -203,6 +207,12 @@ export default function PortalKaryawan() {
         tanggal_lahir: regTanggalLahir,
         bulan: regBulanLahir,
         tahun_lahir: regTahunLahir,
+        nik_ktp: regNik,
+        nama_ibu_kandung: regIbu,
+        no_telp: regTelp,
+        alamat_rumah: regAlamat,
+        nama_rekening: regBank,
+        no_rekening: regNoRek,
         gaji_pokok: 8000000 
       }
     ]);
@@ -320,8 +330,10 @@ export default function PortalKaryawan() {
           <hr/>
           <p><b>Nama:</b> ${karyawanLogin.nama}</p>
           <p><b>Jabatan:</b> ${karyawanLogin.jabatan}</p>
-          <p><b>Tempat/Tgl Lahir:</b> ${karyawanLogin.tempat_lahir || '-'}, ${karyawanLogin.tanggal_lahir || '-'} ${karyawanLogin.bulan || '-'} ${karyawanLogin.tahun_lahir || '-'}</p>
-          <p><b>Email:</b> ${karyawanLogin.email || '-'}</p>
+          <p><b>NIK KTP:</b> ${karyawanLogin.nik_ktp || '-'}</p>
+          <p><b>No Telepon:</b> ${karyawanLogin.no_telp || '-'}</p>
+          <p><b>Alamat Rumah:</b> ${karyawanLogin.alamat_rumah || '-'}</p>
+          <p><b>Rekening:</b> ${karyawanLogin.nama_rekening || '-'} (${karyawanLogin.no_rekening || '-'})</p>
           <hr/>
           <p><b>Gaji Pokok:</b> Rp ${gaji.toLocaleString('id-ID')}</p>
           <p><b>Tunjangan & Kinerja:</b> Rp 500.000</p>
@@ -346,7 +358,7 @@ export default function PortalKaryawan() {
   };
 
   return (
-    <div style={{ background: '#fff', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+    <div style={{ background: '#fff', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', color: '#0f172a' }}>
       {subView === 'login' && !karyawanLogin && (
         <div>
           <h2 style={{ color: '#0f172a', marginBottom: '16px' }}>👤 Login Karyawan / Admin</h2>
@@ -369,10 +381,18 @@ export default function PortalKaryawan() {
       {subView === 'daftar_kry' && (
         <div>
           <h2 style={{ color: '#0f172a', marginBottom: '16px' }}>✍️ Pendaftaran Akun Karyawan</h2>
-          <form onSubmit={handleDaftarKaryawan} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '360px' }}>
+          <form onSubmit={handleDaftarKaryawan} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '380px' }}>
             <input type="text" placeholder="ID Karyawan / NIP..." value={regId} onChange={e => setRegId(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
             <input type="text" placeholder="Nama Lengkap..." value={regNama} onChange={e => setRegNama(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
             <input type="text" placeholder="Jabatan..." value={regJabatan} onChange={e => setRegJabatan(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+            <input type="text" placeholder="NIK KTP..." value={regNik} onChange={e => setRegNik(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+            <input type="text" placeholder="Nama Ibu Kandung..." value={regIbu} onChange={e => setRegIbu(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+            <input type="text" placeholder="Nomor Telepon..." value={regTelp} onChange={e => setRegTelp(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+            <input type="text" placeholder="Alamat Rumah..." value={regAlamat} onChange={e => setRegAlamat(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+            <div style={{ display: 'flex', gap: '6px' }}>
+              <input type="text" placeholder="Nama Bank Rekening" value={regBank} onChange={e => setRegBank(e.target.value)} style={{ width: '50%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+              <input type="text" placeholder="No Rekening" value={regNoRek} onChange={e => setRegNoRek(e.target.value)} style={{ width: '50%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+            </div>
             <input type="text" placeholder="Tempat Lahir..." value={regTempatLahir} onChange={e => setRegTempatLahir(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
             <div style={{ display: 'flex', gap: '6px' }}>
               <input type="text" placeholder="Tgl (1-31)" value={regTanggalLahir} onChange={e => setRegTanggalLahir(e.target.value)} style={{ width: '30%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
@@ -404,8 +424,11 @@ export default function PortalKaryawan() {
       {subView === 'daftar_adm' && (
         <div>
           <h2 style={{ color: '#0f172a', marginBottom: '16px' }}>✍️ Pendaftaran Akun Admin</h2>
-          <form onSubmit={handleDaftarAdmin} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '360px' }}>
+          <form onSubmit={handleDaftarAdmin} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '380px' }}>
             <input type="text" placeholder="Nama Lengkap Admin..." value={regNama} onChange={e => setRegNama(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+            <input type="text" placeholder="NIK KTP..." value={regNik} onChange={e => setRegNik(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+            <input type="text" placeholder="Nomor Telepon..." value={regTelp} onChange={e => setRegTelp(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+            <input type="text" placeholder="Alamat Rumah..." value={regAlamat} onChange={e => setRegAlamat(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
             <input type="text" placeholder="Tempat Lahir..." value={regTempatLahir} onChange={e => setRegTempatLahir(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
             <div style={{ display: 'flex', gap: '6px' }}>
               <input type="text" placeholder="Tgl (1-31)" value={regTanggalLahir} onChange={e => setRegTanggalLahir(e.target.value)} style={{ width: '30%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
@@ -461,7 +484,7 @@ export default function PortalKaryawan() {
           {subView === 'dashboard_kry' && (
             <form onSubmit={handleKirimAbsen} style={{ display: 'flex', flexDirection: 'column', gap: '14px', maxWidth: '360px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '6px' }}>Jenis Absen:</label>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '6px', color: '#0f172a' }}>Jenis Absen:</label>
                 <select value={jenisAbsen} onChange={e => setJenisAbsen(e.target.value as 'Masuk' | 'Pulang')} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
                   <option value="Masuk">🟢 Absen Masuk</option>
                   <option value="Pulang">🔴 Absen Pulang</option>
@@ -469,7 +492,7 @@ export default function PortalKaryawan() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '6px' }}>Status Kehadiran:</label>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '6px', color: '#0f172a' }}>Status Kehadiran:</label>
                 <select value={statusAbsen} onChange={e => setStatusAbsen(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
                   <option value="Hadir">Hadir</option>
                   <option value="Terlambat">Terlambat</option>
@@ -479,7 +502,7 @@ export default function PortalKaryawan() {
               </div>
 
               <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', textAlign: 'center', border: '1px dashed #cbd5e1' }}>
-                <p style={{ fontWeight: 'bold', fontSize: '13px', marginBottom: '8px' }}>📸 Foto Selfie Kehadiran:</p>
+                <p style={{ fontWeight: 'bold', fontSize: '13px', marginBottom: '8px', color: '#0f172a' }}>📸 Foto Selfie Kehadiran:</p>
                 <video ref={videoRef} autoPlay playsInline muted style={{ width: '100%', height: '140px', background: '#000', borderRadius: '8px', objectFit: 'cover' }} />
                 {fotoSnapshot && <p style={{ color: '#10b981', fontSize: '12px', fontWeight: 'bold', margin: '6px 0' }}>✔ Foto Siap Disimpan</p>}
                 <button type="button" onClick={ambilFoto} style={{ marginTop: '8px', background: '#0284c7', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontWeight: 'bold' }}>Ambil Foto Selfie</button>
