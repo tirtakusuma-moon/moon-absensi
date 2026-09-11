@@ -43,10 +43,24 @@ export default function DashboardAdmin() {
     if (data) setDaftarKaryawan(data);
   };
 
-  const handleLoginAdmin = (e: React.FormEvent) => {
+  const handleLoginAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const foundAdmin = daftarKaryawan.find(k => k.email === adminUser && (k.pin === adminPass || adminPass === 'admin123') && k.jabatan.toLowerCase().includes('admin'));
-    if ((adminUser === 'admin' && adminPass === 'admin123') || foundAdmin) {
+
+    // Cek bypass default admin jika diperlukan
+    if (adminUser === 'admin' && adminPass === 'admin123') {
+      setIsLoggedIn(true);
+      return;
+    }
+
+    // Ambil data langsung dari Supabase
+    const { data: foundAdmin, error } = await supabase
+      .from('karyawan')
+      .select('*')
+      .eq('email', adminUser)
+      .eq('pin', adminPass)
+      .single();
+
+    if (foundAdmin && !error) {
       setIsLoggedIn(true);
     } else {
       alert('Login Admin gagal! Pastikan menggunakan Email Admin terdaftar dan PIN yang benar.');
