@@ -96,7 +96,7 @@ export default function App() {
           onNavClick={(view: any) => setCurrentView(view)} 
         />
 
-        <div style={{ padding: '40px 20px', maxWidth: '900px', margin: '0 auto' }}>
+        <div style={{ padding: '40px 20px', maxWidth: '1200px', margin: '0 auto' }}>
           {currentView === 'landing' && (
             <div style={{ background: 'rgba(20, 15, 30, 0.8)', backdropFilter: 'blur(12px)', padding: '40px', borderRadius: '20px', border: '1px solid rgba(255, 183, 197, 0.3)', textAlign: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
               <span style={{ background: '#db2777', color: '#fff', padding: '6px 14px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold' }}>Platform HRIS Enterprise Berstandar Tinggi</span>
