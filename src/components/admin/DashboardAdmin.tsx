@@ -18,6 +18,7 @@ export default function DashboardAdmin() {
   const [adminUser, setAdminUser] = useState('');
   const [adminPass, setAdminPass] = useState('');
   const [daftarKaryawan, setDaftarKaryawan] = useState<Karyawan[]>([]);
+  const [daftarAbsensi, setDaftarAbsensi] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [subView, setSubView] = useState<'dashboard' | 'daftar_adm' | 'lupa'>('dashboard');
 
@@ -35,6 +36,7 @@ export default function DashboardAdmin() {
   useEffect(() => {
     if (isLoggedIn) {
       fetchKaryawan();
+      fetchAbsensi();
     }
   }, [isLoggedIn]);
 
@@ -43,16 +45,19 @@ export default function DashboardAdmin() {
     if (data) setDaftarKaryawan(data);
   };
 
+  const fetchAbsensi = async () => {
+    const { data } = await supabase.from('absensi').select('*').order('created_at', { ascending: false });
+    if (data) setDaftarAbsensi(data);
+  };
+
   const handleLoginAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Cek bypass default admin jika diperlukan
     if (adminUser === 'admin' && adminPass === 'admin123') {
       setIsLoggedIn(true);
       return;
     }
 
-    // Ambil data langsung dari Supabase
     const { data: foundAdmin, error } = await supabase
       .from('karyawan')
       .select('*')
@@ -138,25 +143,37 @@ export default function DashboardAdmin() {
     }
   };
 
-  const handleExportAbsensiExcel = () => {
-  if (daftarAbsensi.length === 0) {
-    alert("Belum ada data absensi untuk diexport.");
-    return;
-  }
-  
-  let csv = "ID Karyawan;Nama;Tanggal;Jam Masuk;Jam Pulang;Status\n";
-  daftarAbsensi.forEach(a => {
-    csv += `"${a.id_karyawan || '-'}";"${a.nama}";"${a.tanggal}";"${a.jam_masuk || '-'}";"${a.jam_pulang || '-'}";"${a.status || 'Hadir'}"\n`;
-  });
+  const handleExportExcel = () => {
+    let csv = "Nama Pegawai;Jabatan;Email;Tempat Lahir;Tanggal Lahir;Bulan Lahir;Tahun Lahir\n";
+    daftarKaryawan.forEach(k => {
+      csv += `"${k.nama}";"${k.jabatan}";"${k.email || '-'}";"${k.tempat_lahir || '-'}";"${k.tanggal_lahir || '-'}";"${k.bulan || '-'}";"${k.tahun_lahir || '-'}"\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute("download", "Database_Pegawai_Moonlight.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.setAttribute("download", "Laporan_Absensi_Moonlight.csv");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
+  const handleExportAbsensiExcel = () => {
+    if (daftarAbsensi.length === 0) {
+      alert("Belum ada data absensi untuk diexport.");
+      return;
+    }
+    let csv = "ID Karyawan;Nama;Tanggal;Jam Masuk;Jam Pulang;Status\n";
+    daftarAbsensi.forEach((a: any) => {
+      csv += `"${a.id_karyawan || '-'}";"${a.nama}";"${a.tanggal}";"${a.jam_masuk || '-'}";"${a.jam_pulang || '-'}";"${a.status || 'Hadir'}"\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute("download", "Laporan_Absensi_Moonlight.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const handleLogoutAdmin = () => {
     setIsLoggedIn(false);
@@ -263,17 +280,17 @@ export default function DashboardAdmin() {
         <button onClick={handleLogoutAdmin} style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>Keluar (Logout)</button>
       </div>
 
-     <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', flexWrap: 'wrap' }}>
-  <button onClick={handleExportExcel} style={{ background: '#059669', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}>
-    Export Database ke Excel (.csv)
-  </button>
-  <button onClick={handleExportAbsensiExcel} style={{ background: '#0284c7', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}>
-     Export Laporan Absensi ke Excel (.csv)
-  </button>
-</div>
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', flexWrap: 'wrap' }}>
+        <button onClick={handleExportExcel} style={{ background: '#059669', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}>
+          Export Database ke Excel (.csv)
+        </button>
+        <button onClick={handleExportAbsensiExcel} style={{ background: '#0284c7', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}>
+          📥 Export Laporan Absensi ke Excel (.csv)
+        </button>
+      </div>
 
       <h3 style={{ fontSize: '15px', color: '#475569', marginBottom: '12px' }}>Daftar Seluruh Akun yang Mendaftar di Sistem</h3>
-      <div style={{ overflowX: 'auto', maxHeight: '350px', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
+      <div style={{ overflowX: 'auto', maxHeight: '300px', border: '1px solid #e2e8f0', borderRadius: '8px', marginBottom: '24px' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
           <thead>
             <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0', color: '#475569' }}>
@@ -296,6 +313,50 @@ export default function DashboardAdmin() {
                   <td style={{ padding: '10px', color: '#0284c7' }}>{k.email || '-'}</td>
                   <td style={{ padding: '10px' }}>
                     <button onClick={() => handleHapusKaryawan(k.id, k.nama)} style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold' }}>Hapus Akun</button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style={{ fontSize: '15px', color: '#475569', marginBottom: '12px' }}>📸 Live Monitoring Absensi & Selfie Karyawan</h3>
+      <div style={{ overflowX: 'auto', maxHeight: '350px', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+          <thead>
+            <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0', color: '#475569' }}>
+              <th style={{ padding: '10px' }}>Foto Selfie</th>
+              <th style={{ padding: '10px' }}>ID Karyawan</th>
+              <th style={{ padding: '10px' }}>Nama Pegawai</th>
+              <th style={{ padding: '10px' }}>Tanggal</th>
+              <th style={{ padding: '10px' }}>Jam Masuk</th>
+              <th style={{ padding: '10px' }}>Jam Pulang</th>
+              <th style={{ padding: '10px' }}>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {daftarAbsensi.length === 0 ? (
+              <tr><td colSpan={7} style={{ padding: '20px', textAlign: 'center', color: '#94a3b8' }}>Belum ada data absensi hari ini.</td></tr>
+            ) : (
+              daftarAbsensi.map((absen: any, idx: number) => (
+                <tr key={idx} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{ padding: '10px' }}>
+                    {absen.foto ? (
+                      <img src={absen.foto} alt="Selfie" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', border: '1px solid #cbd5e1' }} />
+                    ) : (
+                      <span style={{ color: '#94a3b8', fontSize: '11px' }}>Tanpa Foto</span>
+                    )}
+                  </td>
+                  <td style={{ padding: '10px', color: '#64748b' }}>{absen.id_karyawan || '-'}</td>
+                  <td style={{ padding: '10px', fontWeight: 'bold' }}>{absen.nama}</td>
+                  <td style={{ padding: '10px' }}>{absen.tanggal}</td>
+                  <td style={{ padding: '10px', color: '#059669', fontWeight: 'bold' }}>{absen.jam_masuk || '-'}</td>
+                  <td style={{ padding: '10px', color: '#dc2626', fontWeight: 'bold' }}>{absen.jam_pulang || 'Belum Pulang'}</td>
+                  <td style={{ padding: '10px' }}>
+                    <span style={{ background: '#e0f2fe', color: '#0369a1', padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold' }}>
+                      {absen.status || 'Hadir'}
+                    </span>
                   </td>
                 </tr>
               ))
