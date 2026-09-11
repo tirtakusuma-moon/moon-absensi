@@ -1,10 +1,10 @@
 import { useState, useRef } from 'react';
-import { supabase } from '../supabaseClient';
+import { supabase } from '../../supabaseClient';
 
 export default function PortalKaryawan() {
   const [idKaryawan, setIdKaryawan] = useState('');
   const [nama, setNama] = useState('');
-  const [jabatan, setJabatan] = useState('Staff');
+  const [jabatan] = useState('Staff');
   const [fotoSelfie, setFotoSelfie] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -100,7 +100,6 @@ export default function PortalKaryawan() {
     const jamSekarang = new Date().toLocaleTimeString('id-ID');
 
     setLoading(true);
-    // Cari data absensi hari ini berdasarkan ID dan tanggal
     const { data: existing } = await supabase
       .from('absensi')
       .select('*')
