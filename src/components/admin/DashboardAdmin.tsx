@@ -11,6 +11,12 @@ interface Karyawan {
   tanggal_lahir?: string;
   bulan?: string;
   tahun_lahir?: string;
+  nik_ktp?: string;
+  nama_ibu_kandung?: string;
+  no_telp?: string;
+  alamat_rumah?: string;
+  nama_rekening?: string;
+  no_rekening?: string;
 }
 
 export default function DashboardAdmin() {
@@ -19,19 +25,6 @@ export default function DashboardAdmin() {
   const [adminPass, setAdminPass] = useState('');
   const [daftarKaryawan, setDaftarKaryawan] = useState<Karyawan[]>([]);
   const [daftarAbsensi, setDaftarAbsensi] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [subView, setSubView] = useState<'dashboard' | 'daftar_adm' | 'lupa'>('dashboard');
-
-  const [regNamaDepan, setRegNamaDepan] = useState('');
-  const [regNamaBelakang, setRegNamaBelakang] = useState('');
-  const [regTempatLahir, setRegTempatLahir] = useState('');
-  const [regTanggalLahir, setRegTanggalLahir] = useState('');
-  const [regBulanLahir, setRegBulanLahir] = useState('');
-  const [regTahunLahir, setRegTahunLahir] = useState('');
-  const [regGender, setRegGender] = useState('');
-  const [regEmail, setRegEmail] = useState('');
-  const [regPin, setRegPin] = useState('');
-  const [lupaEmail, setLupaEmail] = useState('');
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -52,7 +45,6 @@ export default function DashboardAdmin() {
 
   const handleLoginAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (adminUser === 'admin' && adminPass === 'admin123') {
       setIsLoggedIn(true);
       return;
@@ -72,86 +64,26 @@ export default function DashboardAdmin() {
     }
   };
 
-  const handleDaftarAdmin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const namaLengkap = `${regNamaDepan} ${regNamaBelakang}`.trim();
-    if (!regNamaDepan || !regEmail || !regPin || !regTempatLahir || !regTanggalLahir || !regBulanLahir || !regTahunLahir) {
-      alert('Semua kolom wajib diisi, termasuk nama, tempat, tanggal, bulan, tahun lahir, dan PIN!');
-      return;
-    }
-    if (!regEmail.includes('@gmail.com')) {
-      alert('Gunakan alamat Gmail yang valid.');
-      return;
-    }
-
-    const { data: existing } = await supabase.from('karyawan').select('*').or(`email.eq.${regEmail},nama.eq.${namaLengkap}`);
-    if (existing && existing.length > 0) {
-      alert('Pendaftaran Admin ditolak! Nama atau Email tersebut sudah terdaftar di database.');
-      return;
-    }
-
-    setLoading(true);
-    const { error } = await supabase.from('karyawan').insert([
-      { 
-        id_karyawan: 'ADM-' + Math.floor(1000 + Math.random() * 9000), 
-        nama: namaLengkap, 
-        jabatan: 'Administrator HR', 
-        email: regEmail, 
-        pin: regPin,
-        tempat_lahir: regTempatLahir,
-        tanggal_lahir: regTanggalLahir,
-        bulan: regBulanLahir,
-        tahun_lahir: regTahunLahir,
-        gaji_pokok: 8000000 
-      }
-    ]);
-    setLoading(false);
-    if (error) {
-      alert('Gagal daftar Admin: ' + error.message);
-    } else {
-      alert('Akun Admin berhasil didaftarkan dan data tersimpan di database karyawan!');
-      fetchKaryawan();
-      setSubView('dashboard');
-    }
-  };
-
-  const handleLupaPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!lupaEmail || !lupaEmail.includes('@gmail.com')) {
-      alert('Masukkan Gmail yang valid.');
-      return;
-    }
-    setLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(lupaEmail, { redirectTo: window.location.origin });
-    setLoading(false);
-    if (error) {
-      alert('Gagal mengirim pemulihan: ' + error.message);
-    } else {
-      alert(`Instruksi pemulihan sandi telah dikirimkan ke Gmail: ${lupaEmail}`);
-      setSubView('dashboard');
-    }
-  };
-
   const handleHapusKaryawan = async (id: string, nama: string) => {
     if (window.confirm(`Yakin ingin menghapus akun "${nama}" dari database secara permanen?`)) {
       const { error } = await supabase.from('karyawan').delete().eq('id', id);
       if (error) alert('Gagal menghapus: ' + error.message);
       else {
-        alert(`Akun ${nama} berhasil dihapus dari database.`);
+        alert(`Akun ${nama} berhasil dihapus.`);
         fetchKaryawan();
       }
     }
   };
 
   const handleExportExcel = () => {
-    let csv = "Nama Pegawai;Jabatan;Email;Tempat Lahir;Tanggal Lahir;Bulan Lahir;Tahun Lahir\n";
+    let csv = "Nama;Jabatan;NIK KTP;Nama Ibu Kandung;No Telepon;Alamat;Nama Rekening;No Rekening;Email;Tempat/Tgl Lahir\n";
     daftarKaryawan.forEach(k => {
-      csv += `"${k.nama}";"${k.jabatan}";"${k.email || '-'}";"${k.tempat_lahir || '-'}";"${k.tanggal_lahir || '-'}";"${k.bulan || '-'}";"${k.tahun_lahir || '-'}"\n`;
+      csv += `"${k.nama}";"${k.jabatan}";"${k.nik_ktp || '-'}";"${k.nama_ibu_kandung || '-'}";"${k.no_telp || '-'}";"${k.alamat_rumah || '-'}";"${k.nama_rekening || '-'}";"${k.no_rekening || '-'}";"${k.email || '-'}";"${k.tempat_lahir || '-'}, ${k.tanggal_lahir || ''} ${k.bulan || ''} ${k.tahun_lahir || ''}"\n`;
     });
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.setAttribute("download", "Database_Pegawai_Moonlight.csv");
+    link.setAttribute("download", "Database_Lengkap_Karyawan.csv");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -179,96 +111,17 @@ export default function DashboardAdmin() {
     setIsLoggedIn(false);
     setAdminUser('');
     setAdminPass('');
-    setSubView('dashboard');
   };
 
   if (!isLoggedIn) {
     return (
       <div style={{ background: '#fff', padding: '30px', borderRadius: '16px', maxWidth: '380px', margin: '40px auto', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', textAlign: 'center' }}>
-        {subView === 'dashboard' && (
-          <div>
-            <h2 style={{ color: '#0f172a', marginBottom: '16px' }}>🔐 Login Admin (Email & PIN)</h2>
-            <form onSubmit={handleLoginAdmin} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <input type="email" placeholder="Email Admin Terdaftar..." value={adminUser} onChange={e => setAdminUser(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-              <input type="password" placeholder="PIN / Password Admin..." value={adminPass} onChange={e => setAdminPass(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-              <button type="submit" style={{ background: '#0f172a', color: '#fff', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>Masuk Dashboard Admin</button>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginTop: '6px' }}>
-                <span onClick={() => setSubView('daftar_adm')} style={{ color: '#059669', cursor: 'pointer', fontWeight: 'bold' }}>Daftar Admin</span>
-                <span onClick={() => setSubView('lupa')} style={{ color: '#dc2626', cursor: 'pointer', fontWeight: 'bold' }}>Lupa PIN?</span>
-              </div>
-            </form>
-          </div>
-        )}
-
-        {subView === 'daftar_adm' && (
-          <div style={{ textAlign: 'left' }}>
-            <h2 style={{ color: '#1c1e21', marginBottom: '4px', fontSize: '20px' }}>Mulai Buat Akun Admin</h2>
-            <p style={{ color: '#606770', fontSize: '13px', marginBottom: '12px' }}>Cepat dan mudah.</p>
-            <form onSubmit={handleDaftarAdmin} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <input type="text" placeholder="Nama depan" value={regNamaDepan} onChange={e => setRegNamaDepan(e.target.value)} style={{ flex: 1, padding: '8px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#f5f6f7' }} />
-                <input type="text" placeholder="Nama belakang" value={regNamaBelakang} onChange={e => setRegNamaBelakang(e.target.value)} style={{ flex: 1, padding: '8px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#f5f6f7' }} />
-              </div>
-              <input type="text" placeholder="Tempat Lahir..." value={regTempatLahir} onChange={e => setRegTempatLahir(e.target.value)} style={{ padding: '8px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#f5f6f7' }} />
-              
-              <label style={{ fontSize: '12px', color: '#606770', fontWeight: 'bold' }}>Tanggal lahir</label>
-              <div style={{ display: 'flex', gap: '6px' }}>
-                <select value={regTanggalLahir} onChange={e => setRegTanggalLahir(e.target.value)} style={{ flex: 1, padding: '6px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#fff' }}>
-                  <option value="">Hari</option>
-                  {Array.from({length: 31}, (_, i) => <option key={i+1} value={i+1}>{i+1}</option>)}
-                </select>
-                <select value={regBulanLahir} onChange={e => setRegBulanLahir(e.target.value)} style={{ flex: 1, padding: '6px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#fff' }}>
-                  <option value="">Bulan</option>
-                  <option value="Januari">Januari</option>
-                  <option value="Februari">Februari</option>
-                  <option value="Maret">Maret</option>
-                  <option value="April">April</option>
-                  <option value="Mei">Mei</option>
-                  <option value="Juni">Juni</option>
-                  <option value="Juli">Juli</option>
-                  <option value="Agustus">Agustus</option>
-                  <option value="September">September</option>
-                  <option value="Oktober">Oktober</option>
-                  <option value="November">November</option>
-                  <option value="Desember">Desember</option>
-                </select>
-                <select value={regTahunLahir} onChange={e => setRegTahunLahir(e.target.value)} style={{ flex: 1, padding: '6px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#fff' }}>
-                  <option value="">Tahun</option>
-                  {Array.from({length: 50}, (_, i) => <option key={2026-i} value={2026-i}>{2026-i}</option>)}
-                </select>
-              </div>
-
-              <label style={{ fontSize: '12px', color: '#606770', fontWeight: 'bold' }}>Jenis kelamin</label>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <label onClick={() => setRegGender('Perempuan')} style={{ flex: 1, border: '1px solid #ccd0d5', padding: '6px', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '13px', cursor: 'pointer', background: regGender === 'Perempuan' ? '#e7f3ff' : '#fff' }}>
-                  Perempuan <input type="radio" name="genderAdm" checked={regGender === 'Perempuan'} onChange={() => setRegGender('Perempuan')} />
-                </label>
-                <label onClick={() => setRegGender('Laki-laki')} style={{ flex: 1, border: '1px solid #ccd0d5', padding: '6px', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '13px', cursor: 'pointer', background: regGender === 'Laki-laki' ? '#e7f3ff' : '#fff' }}>
-                  Laki-laki <input type="radio" name="genderAdm" checked={regGender === 'Laki-laki'} onChange={() => setRegGender('Laki-laki')} />
-                </label>
-              </div>
-
-              <input type="email" placeholder="Alamat Gmail Admin..." value={regEmail} onChange={e => setRegEmail(e.target.value)} style={{ padding: '8px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#f5f6f7' }} />
-              <input type="password" maxLength={6} placeholder="Password / PIN Admin (6 Digit)..." value={regPin} onChange={e => setRegPin(e.target.value)} style={{ padding: '8px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#f5f6f7' }} />
-              
-              <button type="submit" disabled={loading} style={{ background: '#0f172a', color: '#fff', border: 'none', padding: '10px', borderRadius: '6px', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer', marginTop: '6px' }}>
-                {loading ? 'Menyimpan...' : 'Daftar Admin ke Database'}
-              </button>
-              <span onClick={() => setSubView('dashboard')} style={{ color: '#1877f2', cursor: 'pointer', fontSize: '13px', textAlign: 'center', fontWeight: 'bold' }}>← Kembali ke Login</span>
-            </form>
-          </div>
-        )}
-
-        {subView === 'lupa' && (
-          <div style={{ textAlign: 'left' }}>
-            <h2 style={{ color: '#1c1e21', marginBottom: '8px', fontSize: '18px' }}>🔄 Pemulihan PIN via Gmail</h2>
-            <form onSubmit={handleLupaPassword} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <input type="email" placeholder="Masukkan Gmail terdaftar..." value={lupaEmail} onChange={e => setLupaEmail(e.target.value)} style={{ padding: '8px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#f5f6f7' }} />
-              <button type="submit" disabled={loading} style={{ background: '#0284c7', color: '#fff', border: 'none', padding: '8px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Kirim Pemulihan</button>
-              <span onClick={() => setSubView('dashboard')} style={{ color: '#1877f2', cursor: 'pointer', fontSize: '13px', fontWeight: 'bold', textAlign: 'center' }}>← Kembali ke Login</span>
-            </form>
-          </div>
-        )}
+        <h2 style={{ color: '#0f172a', marginBottom: '16px' }}>🔐 Login Admin (Email & PIN)</h2>
+        <form onSubmit={handleLoginAdmin} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <input type="email" placeholder="Email Admin Terdaftar..." value={adminUser} onChange={e => setAdminUser(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+          <input type="password" placeholder="PIN / Password Admin..." value={adminPass} onChange={e => setAdminPass(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+          <button type="submit" style={{ background: '#0f172a', color: '#fff', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>Masuk Dashboard Admin</button>
+        </form>
       </div>
     );
   }
@@ -289,30 +142,34 @@ export default function DashboardAdmin() {
         </button>
       </div>
 
-      <h3 style={{ fontSize: '15px', color: '#475569', marginBottom: '12px' }}>Daftar Seluruh Akun yang Mendaftar di Sistem</h3>
-      <div style={{ overflowX: 'auto', maxHeight: '300px', border: '1px solid #e2e8f0', borderRadius: '8px', marginBottom: '24px' }}>
+      <h3 style={{ fontSize: '15px', color: '#0f172a', marginBottom: '12px', fontWeight: 'bold' }}>Daftar Seluruh Akun yang Mendaftar di Sistem</h3>
+      <div style={{ overflowX: 'auto', maxHeight: '350px', border: '1px solid #e2e8f0', borderRadius: '8px', marginBottom: '24px' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
           <thead>
             <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0', color: '#475569' }}>
               <th style={{ padding: '10px' }}>Nama</th>
               <th style={{ padding: '10px' }}>Jabatan</th>
-              <th style={{ padding: '10px' }}>Tempat, Tgl, Bln & Thn Lahir</th>
+              <th style={{ padding: '10px' }}>NIK / No. Telp</th>
+              <th style={{ padding: '10px' }}>Ibu Kandung & Alamat</th>
+              <th style={{ padding: '10px' }}>Rekening Bank</th>
               <th style={{ padding: '10px' }}>Email Gmail</th>
-              <th style={{ padding: '10px' }}>Aksi Database</th>
+              <th style={{ padding: '10px' }}>Aksi</th>
             </tr>
           </thead>
           <tbody>
             {daftarKaryawan.length === 0 ? (
-              <tr><td colSpan={5} style={{ padding: '20px', textAlign: 'center', color: '#94a3b8' }}>Belum ada data pendaftar.</td></tr>
+              <tr><td colSpan={7} style={{ padding: '20px', textAlign: 'center', color: '#94a3b8' }}>Belum ada data pendaftar.</td></tr>
             ) : (
               daftarKaryawan.map(k => (
                 <tr key={k.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={{ padding: '10px', fontWeight: 'bold' }}>{k.nama}</td>
-                  <td style={{ padding: '10px', color: '#64748b' }}>{k.jabatan}</td>
-                  <td style={{ padding: '10px', color: '#334155' }}>{k.tempat_lahir || '-' }, {k.tanggal_lahir || '-'} {k.bulan || '-'} {k.tahun_lahir || '-'}</td>
+                  <td style={{ padding: '10px', fontWeight: 'bold', color: '#0f172a' }}>{k.nama}</td>
+                  <td style={{ padding: '10px', color: '#475569' }}>{k.jabatan}</td>
+                  <td style={{ padding: '10px', color: '#334155' }}>NIK: {k.nik_ktp || '-'}<br/>Telp: {k.no_telp || '-'}</td>
+                  <td style={{ padding: '10px', color: '#334155' }}>Ibu: {k.nama_ibu_kandung || '-'}<br/>Alamat: {k.alamat_rumah || '-'}</td>
+                  <td style={{ padding: '10px', color: '#334155' }}>{k.nama_rekening || '-'}<br/>{k.no_rekening || '-'}</td>
                   <td style={{ padding: '10px', color: '#0284c7' }}>{k.email || '-'}</td>
                   <td style={{ padding: '10px' }}>
-                    <button onClick={() => handleHapusKaryawan(k.id, k.nama)} style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold' }}>Hapus Akun</button>
+                    <button onClick={() => handleHapusKaryawan(k.id, k.nama)} style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold' }}>Hapus</button>
                   </td>
                 </tr>
               ))
@@ -321,7 +178,7 @@ export default function DashboardAdmin() {
         </table>
       </div>
 
-      <h3 style={{ fontSize: '15px', color: '#475569', marginBottom: '12px' }}>📸 Live Monitoring Absensi & Selfie Karyawan</h3>
+      <h3 style={{ fontSize: '15px', color: '#0f172a', marginBottom: '12px', fontWeight: 'bold' }}>📸 Live Monitoring Absensi & Selfie Karyawan</h3>
       <div style={{ overflowX: 'auto', maxHeight: '350px', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
           <thead>
@@ -348,7 +205,6 @@ export default function DashboardAdmin() {
                       <span style={{ color: '#94a3b8', fontSize: '11px' }}>Tanpa Foto</span>
                     )}
                   </td>
-                  {/* Perbaiki warna teks di baris-baris ini agar tidak pudar */}
                   <td style={{ padding: '10px', color: '#334155' }}>{absen.id_karyawan || '-'}</td>
                   <td style={{ padding: '10px', fontWeight: 'bold', color: '#0f172a' }}>{absen.nama}</td>
                   <td style={{ padding: '10px', color: '#334155' }}>{absen.tanggal}</td>
