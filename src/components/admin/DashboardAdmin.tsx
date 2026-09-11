@@ -115,38 +115,38 @@ export default function DashboardAdmin() {
 
   if (!isLoggedIn) {
     return (
-      <div style={{ background: '#fff', padding: '30px', borderRadius: '16px', maxWidth: '380px', margin: '40px auto', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', textAlign: 'center' }}>
-        <h2 style={{ color: '#0f172a', marginBottom: '16px' }}>🔐 Login Admin (Email & PIN)</h2>
+      <div style={{ background: 'rgba(20, 15, 30, 0.85)', backdropFilter: 'blur(14px)', border: '1px solid rgba(255, 183, 197, 0.25)', padding: '30px', borderRadius: '16px', maxWidth: '380px', margin: '40px auto', boxShadow: '0 4px 20px rgba(0,0,0,0.5)', textAlign: 'center', color: '#fff' }}>
+        <h2 style={{ color: '#fff', marginBottom: '16px' }}>🔐 Login Admin (Email & PIN)</h2>
         <form onSubmit={handleLoginAdmin} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <input type="email" placeholder="Email Admin Terdaftar..." value={adminUser} onChange={e => setAdminUser(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-          <input type="password" placeholder="PIN / Password Admin..." value={adminPass} onChange={e => setAdminPass(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-          <button type="submit" style={{ background: '#0f172a', color: '#fff', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>Masuk Dashboard Admin</button>
+          <input type="email" placeholder="Email Admin Terdaftar..." value={adminUser} onChange={e => setAdminUser(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+          <input type="password" placeholder="PIN / Password Admin..." value={adminPass} onChange={e => setAdminPass(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+          <button type="submit" style={{ background: '#38bdf8', color: '#0f172a', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>Masuk Dashboard Admin</button>
         </form>
       </div>
     );
   }
 
   return (
-    <div style={{ background: '#fff', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+    <div style={{ background: 'rgba(20, 15, 30, 0.85)', backdropFilter: 'blur(14px)', border: '1px solid rgba(255, 183, 197, 0.25)', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.5)', color: '#fff' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h2 style={{ color: '#0f172a', margin: 0 }}>📊 Database Pendaftaran Pegawai & Admin</h2>
+        <h2 style={{ color: '#fff', margin: 0 }}>📊 Database Pendaftaran Pegawai & Admin</h2>
         <button onClick={handleLogoutAdmin} style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>Keluar (Logout)</button>
       </div>
 
       <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', flexWrap: 'wrap' }}>
-        <button onClick={handleExportExcel} style={{ background: '#059669', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}>
+        <button onClick={handleExportExcel} style={{ background: '#34d399', color: '#0f172a', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}>
           Export Database ke Excel (.csv)
         </button>
-        <button onClick={handleExportAbsensiExcel} style={{ background: '#0284c7', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}>
+        <button onClick={handleExportAbsensiExcel} style={{ background: '#38bdf8', color: '#0f172a', border: 'none', padding: '8px 14px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}>
           📥 Export Laporan Absensi ke Excel (.csv)
         </button>
       </div>
 
-      <h3 style={{ fontSize: '15px', color: '#0f172a', marginBottom: '12px', fontWeight: 'bold' }}>Daftar Seluruh Akun yang Mendaftar di Sistem</h3>
-      <div style={{ overflowX: 'auto', maxHeight: '350px', border: '1px solid #e2e8f0', borderRadius: '8px', marginBottom: '24px' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+      <h3 style={{ fontSize: '15px', color: '#fff', marginBottom: '12px', fontWeight: 'bold' }}>Daftar Seluruh Akun yang Mendaftar di Sistem</h3>
+      <div style={{ overflowX: 'auto', maxHeight: '350px', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', marginBottom: '24px', background: 'rgba(15,23,42,0.6)' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px', color: '#fff' }}>
           <thead>
-            <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0', color: '#475569' }}>
+            <tr style={{ background: 'rgba(30, 41, 59, 0.9)', borderBottom: '2px solid rgba(255,255,255,0.2)', color: '#cbd5e1' }}>
               <th style={{ padding: '10px' }}>Nama</th>
               <th style={{ padding: '10px' }}>Jabatan</th>
               <th style={{ padding: '10px' }}>NIK / No. Telp</th>
@@ -161,13 +161,13 @@ export default function DashboardAdmin() {
               <tr><td colSpan={7} style={{ padding: '20px', textAlign: 'center', color: '#94a3b8' }}>Belum ada data pendaftar.</td></tr>
             ) : (
               daftarKaryawan.map(k => (
-                <tr key={k.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={{ padding: '10px', fontWeight: 'bold', color: '#0f172a' }}>{k.nama}</td>
-                  <td style={{ padding: '10px', color: '#475569' }}>{k.jabatan}</td>
-                  <td style={{ padding: '10px', color: '#334155' }}>NIK: {k.nik_ktp || '-'}<br/>Telp: {k.no_telp || '-'}</td>
-                  <td style={{ padding: '10px', color: '#334155' }}>Ibu: {k.nama_ibu_kandung || '-'}<br/>Alamat: {k.alamat_rumah || '-'}</td>
-                  <td style={{ padding: '10px', color: '#334155' }}>{k.nama_rekening || '-'}<br/>{k.no_rekening || '-'}</td>
-                  <td style={{ padding: '10px', color: '#0284c7' }}>{k.email || '-'}</td>
+                <tr key={k.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                  <td style={{ padding: '10px', fontWeight: 'bold', color: '#fff' }}>{k.nama}</td>
+                  <td style={{ padding: '10px', color: '#cbd5e1' }}>{k.jabatan}</td>
+                  <td style={{ padding: '10px', color: '#e2e8f0' }}>NIK: {k.nik_ktp || '-'}<br/>Telp: {k.no_telp || '-'}</td>
+                  <td style={{ padding: '10px', color: '#e2e8f0' }}>Ibu: {k.nama_ibu_kandung || '-'}<br/>Alamat: {k.alamat_rumah || '-'}</td>
+                  <td style={{ padding: '10px', color: '#e2e8f0' }}>{k.nama_rekening || '-'}<br/>{k.no_rekening || '-'}</td>
+                  <td style={{ padding: '10px', color: '#38bdf8' }}>{k.email || '-'}</td>
                   <td style={{ padding: '10px' }}>
                     <button onClick={() => handleHapusKaryawan(k.id, k.nama)} style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold' }}>Hapus</button>
                   </td>
@@ -178,11 +178,11 @@ export default function DashboardAdmin() {
         </table>
       </div>
 
-      <h3 style={{ fontSize: '15px', color: '#0f172a', marginBottom: '12px', fontWeight: 'bold' }}>📸 Live Monitoring Absensi & Selfie Karyawan</h3>
-      <div style={{ overflowX: 'auto', maxHeight: '350px', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+      <h3 style={{ fontSize: '15px', color: '#fff', marginBottom: '12px', fontWeight: 'bold' }}>📸 Live Monitoring Absensi & Selfie Karyawan</h3>
+      <div style={{ overflowX: 'auto', maxHeight: '350px', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', background: 'rgba(15,23,42,0.6)' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px', color: '#fff' }}>
           <thead>
-            <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0', color: '#475569' }}>
+            <tr style={{ background: 'rgba(30, 41, 59, 0.9)', borderBottom: '2px solid rgba(255,255,255,0.2)', color: '#cbd5e1' }}>
               <th style={{ padding: '10px' }}>Foto Selfie</th>
               <th style={{ padding: '10px' }}>ID Karyawan</th>
               <th style={{ padding: '10px' }}>Nama Pegawai</th>
@@ -197,21 +197,21 @@ export default function DashboardAdmin() {
               <tr><td colSpan={7} style={{ padding: '20px', textAlign: 'center', color: '#94a3b8' }}>Belum ada data absensi hari ini.</td></tr>
             ) : (
               daftarAbsensi.map((absen: any, idx: number) => (
-                <tr key={idx} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                <tr key={idx} style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
                   <td style={{ padding: '10px' }}>
                     {absen.foto ? (
-                      <img src={absen.foto} alt="Selfie" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', border: '1px solid #cbd5e1' }} />
+                      <img src={absen.foto} alt="Selfie" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', border: '1px solid rgba(255,255,255,0.3)' }} />
                     ) : (
                       <span style={{ color: '#94a3b8', fontSize: '11px' }}>Tanpa Foto</span>
                     )}
                   </td>
-                  <td style={{ padding: '10px', color: '#334155' }}>{absen.id_karyawan || '-'}</td>
-                  <td style={{ padding: '10px', fontWeight: 'bold', color: '#0f172a' }}>{absen.nama}</td>
-                  <td style={{ padding: '10px', color: '#334155' }}>{absen.tanggal}</td>
-                  <td style={{ padding: '10px', color: '#059669', fontWeight: 'bold' }}>{absen.jam_masuk || '-'}</td>
-                  <td style={{ padding: '10px', color: '#dc2626', fontWeight: 'bold' }}>{absen.jam_pulang || 'Belum Pulang'}</td>
+                  <td style={{ padding: '10px', color: '#cbd5e1' }}>{absen.id_karyawan || '-'}</td>
+                  <td style={{ padding: '10px', fontWeight: 'bold', color: '#fff' }}>{absen.nama}</td>
+                  <td style={{ padding: '10px', color: '#cbd5e1' }}>{absen.tanggal}</td>
+                  <td style={{ padding: '10px', color: '#34d399', fontWeight: 'bold' }}>{absen.jam_masuk || '-'}</td>
+                  <td style={{ padding: '10px', color: '#f87171', fontWeight: 'bold' }}>{absen.jam_pulang || 'Belum Pulang'}</td>
                   <td style={{ padding: '10px' }}>
-                    <span style={{ background: '#e0f2fe', color: '#0369a1', padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold' }}>
+                    <span style={{ background: 'rgba(56, 189, 248, 0.2)', color: '#38bdf8', padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold', border: '1px solid rgba(56, 189, 248, 0.4)' }}>
                       {absen.status || 'Hadir'}
                     </span>
                   </td>
