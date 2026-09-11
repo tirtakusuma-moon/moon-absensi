@@ -13,8 +13,13 @@ interface Karyawan {
   bulan?: string;
   tahun_lahir?: string;
   gaji_pokok?: number;
+  nik_ktp?: string;
+  nama_ibu_kandung?: string;
+  no_telp?: string;
+  alamat_rumah?: string;
+  nama_rekening?: string;
+  no_rekening?: string;
 }
-
 export default function PortalKaryawan() {
   const [subView, setSubView] = useState<'login' | 'daftar_kry' | 'daftar_adm' | 'lupa' | 'dashboard_kry' | 'slip_gaji'>('login');
   const [daftarKaryawan, setDaftarKaryawan] = useState<Karyawan[]>([]);
