@@ -368,7 +368,7 @@ export default function PortalKaryawan() {
       {subView === 'login' && !karyawanLogin && (
         <div>
           <h2 style={{ color: '#fff', marginBottom: '16px' }}>👤 Login Karyawan / Admin</h2>
-          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '360px' }}>
+          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '100%' }}>
             <select value={selectedId} onChange={e => setSelectedId(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }}>
               <option value="">-- Pilih Nama Pengguna --</option>
               {daftarKaryawan.map(k => <option key={k.id} value={k.id}>{k.nama} ({k.jabatan})</option>)}
