@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import Navbar from './components/Navbar';
-import PortalKaryawan from './components/PortalKaryawan';
-import DashboardAdmin from './components/DashboardAdmin';
-
+import Navbar from './components/common/Navbar';
+import PortalKaryawan from './components/karyawan/PortalKaryawan';
+import DashboardAdmin from './components/admin/DashboardAdmin';
 export default function App() {
   const [currentView, setCurrentView] = useState<'landing' | 'portal' | 'admin'>('landing');
   const [namaPerusahaan] = useState('PT. Moonjustfine');
