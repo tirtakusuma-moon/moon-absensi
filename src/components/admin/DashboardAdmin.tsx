@@ -348,9 +348,10 @@ export default function DashboardAdmin() {
                       <span style={{ color: '#94a3b8', fontSize: '11px' }}>Tanpa Foto</span>
                     )}
                   </td>
-                  <td style={{ padding: '10px', color: '#64748b' }}>{absen.id_karyawan || '-'}</td>
-                  <td style={{ padding: '10px', fontWeight: 'bold' }}>{absen.nama}</td>
-                  <td style={{ padding: '10px' }}>{absen.tanggal}</td>
+                  {/* Perbaiki warna teks di baris-baris ini agar tidak pudar */}
+                  <td style={{ padding: '10px', color: '#334155' }}>{absen.id_karyawan || '-'}</td>
+                  <td style={{ padding: '10px', fontWeight: 'bold', color: '#0f172a' }}>{absen.nama}</td>
+                  <td style={{ padding: '10px', color: '#334155' }}>{absen.tanggal}</td>
                   <td style={{ padding: '10px', color: '#059669', fontWeight: 'bold' }}>{absen.jam_masuk || '-'}</td>
                   <td style={{ padding: '10px', color: '#dc2626', fontWeight: 'bold' }}>{absen.jam_pulang || 'Belum Pulang'}</td>
                   <td style={{ padding: '10px' }}>
