@@ -138,19 +138,25 @@ export default function DashboardAdmin() {
     }
   };
 
-  const handleExportExcel = () => {
-    let csv = "Nama Pegawai;Jabatan;Email;Tempat Lahir;Tanggal Lahir;Bulan Lahir;Tahun Lahir\n";
-    daftarKaryawan.forEach(k => {
-      csv += `"${k.nama}";"${k.jabatan}";"${k.email || '-'}";"${k.tempat_lahir || '-'}";"${k.tanggal_lahir || '-'}";"${k.bulan || '-'}";"${k.tahun_lahir || '-'}"\n`;
-    });
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.setAttribute("download", "Database_Pegawai_Moonlight.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+  const handleExportAbsensiExcel = () => {
+  if (daftarAbsensi.length === 0) {
+    alert("Belum ada data absensi untuk diexport.");
+    return;
+  }
+  
+  let csv = "ID Karyawan;Nama;Tanggal;Jam Masuk;Jam Pulang;Status\n";
+  daftarAbsensi.forEach(a => {
+    csv += `"${a.id_karyawan || '-'}";"${a.nama}";"${a.tanggal}";"${a.jam_masuk || '-'}";"${a.jam_pulang || '-'}";"${a.status || 'Hadir'}"\n`;
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.setAttribute("download", "Laporan_Absensi_Moonlight.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
 
   const handleLogoutAdmin = () => {
     setIsLoggedIn(false);
