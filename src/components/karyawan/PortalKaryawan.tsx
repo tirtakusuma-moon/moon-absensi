@@ -20,6 +20,7 @@ interface Karyawan {
   nama_rekening?: string;
   no_rekening?: string;
 }
+
 export default function PortalKaryawan() {
   const [subView, setSubView] = useState<'login' | 'daftar_kry' | 'daftar_adm' | 'lupa' | 'dashboard_kry' | 'slip_gaji'>('login');
   const [daftarKaryawan, setDaftarKaryawan] = useState<Karyawan[]>([]);
@@ -363,21 +364,21 @@ export default function PortalKaryawan() {
   };
 
   return (
-    <div style={{ background: '#fff', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', color: '#0f172a' }}>
+    <div style={{ background: 'rgba(20, 15, 30, 0.85)', backdropFilter: 'blur(14px)', border: '1px solid rgba(255, 183, 197, 0.25)', padding: '24px', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.5)', color: '#fff' }}>
       {subView === 'login' && !karyawanLogin && (
         <div>
-          <h2 style={{ color: '#0f172a', marginBottom: '16px' }}>👤 Login Karyawan / Admin</h2>
+          <h2 style={{ color: '#fff', marginBottom: '16px' }}>👤 Login Karyawan / Admin</h2>
           <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '360px' }}>
-            <select value={selectedId} onChange={e => setSelectedId(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
+            <select value={selectedId} onChange={e => setSelectedId(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }}>
               <option value="">-- Pilih Nama Pengguna --</option>
               {daftarKaryawan.map(k => <option key={k.id} value={k.id}>{k.nama} ({k.jabatan})</option>)}
             </select>
-            <input type="password" maxLength={6} placeholder="PIN / Password..." value={inputPin} onChange={e => setInputPin(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <button type="submit" style={{ background: '#0f172a', color: '#fff', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>Masuk Portal</button>
+            <input type="password" maxLength={6} placeholder="PIN / Password..." value={inputPin} onChange={e => setInputPin(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+            <button type="submit" style={{ background: '#f472b6', color: '#0f172a', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>Masuk Portal</button>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginTop: '6px' }}>
-              <span onClick={() => setSubView('daftar_kry')} style={{ color: '#0284c7', cursor: 'pointer', fontWeight: 'bold' }}>Daftar Karyawan</span>
-              <span onClick={() => setSubView('daftar_adm')} style={{ color: '#059669', cursor: 'pointer', fontWeight: 'bold' }}>Daftar Admin</span>
-              <span onClick={() => setSubView('lupa')} style={{ color: '#dc2626', cursor: 'pointer', fontWeight: 'bold' }}>Lupa PIN?</span>
+              <span onClick={() => setSubView('daftar_kry')} style={{ color: '#38bdf8', cursor: 'pointer', fontWeight: 'bold' }}>Daftar Karyawan</span>
+              <span onClick={() => setSubView('daftar_adm')} style={{ color: '#4ade80', cursor: 'pointer', fontWeight: 'bold' }}>Daftar Admin</span>
+              <span onClick={() => setSubView('lupa')} style={{ color: '#f87171', cursor: 'pointer', fontWeight: 'bold' }}>Lupa PIN?</span>
             </div>
           </form>
         </div>
@@ -385,23 +386,23 @@ export default function PortalKaryawan() {
 
       {subView === 'daftar_kry' && (
         <div>
-          <h2 style={{ color: '#0f172a', marginBottom: '16px' }}>✍️ Pendaftaran Akun Karyawan</h2>
+          <h2 style={{ color: '#fff', marginBottom: '16px' }}>✍️ Pendaftaran Akun Karyawan</h2>
           <form onSubmit={handleDaftarKaryawan} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '380px' }}>
-            <input type="text" placeholder="ID Karyawan / NIP..." value={regId} onChange={e => setRegId(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <input type="text" placeholder="Nama Lengkap..." value={regNama} onChange={e => setRegNama(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <input type="text" placeholder="Jabatan..." value={regJabatan} onChange={e => setRegJabatan(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <input type="text" placeholder="NIK KTP..." value={regNik} onChange={e => setRegNik(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <input type="text" placeholder="Nama Ibu Kandung..." value={regIbu} onChange={e => setRegIbu(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <input type="text" placeholder="Nomor Telepon..." value={regTelp} onChange={e => setRegTelp(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <input type="text" placeholder="Alamat Rumah..." value={regAlamat} onChange={e => setRegAlamat(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+            <input type="text" placeholder="ID Karyawan / NIP..." value={regId} onChange={e => setRegId(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+            <input type="text" placeholder="Nama Lengkap..." value={regNama} onChange={e => setRegNama(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+            <input type="text" placeholder="Jabatan..." value={regJabatan} onChange={e => setRegJabatan(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+            <input type="text" placeholder="NIK KTP..." value={regNik} onChange={e => setRegNik(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+            <input type="text" placeholder="Nama Ibu Kandung..." value={regIbu} onChange={e => setRegIbu(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+            <input type="text" placeholder="Nomor Telepon..." value={regTelp} onChange={e => setRegTelp(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+            <input type="text" placeholder="Alamat Rumah..." value={regAlamat} onChange={e => setRegAlamat(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
             <div style={{ display: 'flex', gap: '6px' }}>
-              <input type="text" placeholder="Nama Bank Rekening" value={regBank} onChange={e => setRegBank(e.target.value)} style={{ width: '50%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-              <input type="text" placeholder="No Rekening" value={regNoRek} onChange={e => setRegNoRek(e.target.value)} style={{ width: '50%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+              <input type="text" placeholder="Nama Bank" value={regBank} onChange={e => setRegBank(e.target.value)} style={{ width: '50%', padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+              <input type="text" placeholder="No Rekening" value={regNoRek} onChange={e => setRegNoRek(e.target.value)} style={{ width: '50%', padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
             </div>
-            <input type="text" placeholder="Tempat Lahir..." value={regTempatLahir} onChange={e => setRegTempatLahir(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+            <input type="text" placeholder="Tempat Lahir..." value={regTempatLahir} onChange={e => setRegTempatLahir(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
             <div style={{ display: 'flex', gap: '6px' }}>
-              <input type="text" placeholder="Tgl (1-31)" value={regTanggalLahir} onChange={e => setRegTanggalLahir(e.target.value)} style={{ width: '30%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-              <select value={regBulanLahir} onChange={e => setRegBulanLahir(e.target.value)} style={{ width: '40%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
+              <input type="text" placeholder="Tgl (1-31)" value={regTanggalLahir} onChange={e => setRegTanggalLahir(e.target.value)} style={{ width: '30%', padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+              <select value={regBulanLahir} onChange={e => setRegBulanLahir(e.target.value)} style={{ width: '40%', padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }}>
                 <option value="">Bulan</option>
                 <option value="Januari">Januari</option>
                 <option value="Februari">Februari</option>
@@ -416,28 +417,28 @@ export default function PortalKaryawan() {
                 <option value="November">November</option>
                 <option value="Desember">Desember</option>
               </select>
-              <input type="text" placeholder="Tahun" value={regTahunLahir} onChange={e => setRegTahunLahir(e.target.value)} style={{ width: '30%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+              <input type="text" placeholder="Tahun" value={regTahunLahir} onChange={e => setRegTahunLahir(e.target.value)} style={{ width: '30%', padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
             </div>
-            <input type="email" placeholder="Alamat Gmail..." value={regEmail} onChange={e => setRegEmail(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <input type="password" maxLength={6} placeholder="Buat PIN (6 Digit)..." value={regPin} onChange={e => setRegPin(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <button type="submit" disabled={loading} style={{ background: '#059669', color: '#fff', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>{loading ? 'Menyimpan...' : 'Daftar Karyawan'}</button>
-            <span onClick={() => setSubView('login')} style={{ color: '#64748b', cursor: 'pointer', fontSize: '13px' }}>← Kembali ke Login</span>
+            <input type="email" placeholder="Alamat Gmail..." value={regEmail} onChange={e => setRegEmail(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+            <input type="password" maxLength={6} placeholder="Buat PIN (6 Digit)..." value={regPin} onChange={e => setRegPin(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+            <button type="submit" disabled={loading} style={{ background: '#34d399', color: '#0f172a', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>{loading ? 'Menyimpan...' : 'Daftar Karyawan'}</button>
+            <span onClick={() => setSubView('login')} style={{ color: '#94a3b8', cursor: 'pointer', fontSize: '13px' }}>← Kembali ke Login</span>
           </form>
         </div>
       )}
 
       {subView === 'daftar_adm' && (
         <div>
-          <h2 style={{ color: '#0f172a', marginBottom: '16px' }}>✍️ Pendaftaran Akun Admin</h2>
+          <h2 style={{ color: '#fff', marginBottom: '16px' }}>✍️ Pendaftaran Akun Admin</h2>
           <form onSubmit={handleDaftarAdmin} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '380px' }}>
-            <input type="text" placeholder="Nama Lengkap Admin..." value={regNama} onChange={e => setRegNama(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <input type="text" placeholder="NIK KTP..." value={regNik} onChange={e => setRegNik(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <input type="text" placeholder="Nomor Telepon..." value={regTelp} onChange={e => setRegTelp(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <input type="text" placeholder="Alamat Rumah..." value={regAlamat} onChange={e => setRegAlamat(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <input type="text" placeholder="Tempat Lahir..." value={regTempatLahir} onChange={e => setRegTempatLahir(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+            <input type="text" placeholder="Nama Lengkap Admin..." value={regNama} onChange={e => setRegNama(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+            <input type="text" placeholder="NIK KTP..." value={regNik} onChange={e => setRegNik(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+            <input type="text" placeholder="Nomor Telepon..." value={regTelp} onChange={e => setRegTelp(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+            <input type="text" placeholder="Alamat Rumah..." value={regAlamat} onChange={e => setRegAlamat(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+            <input type="text" placeholder="Tempat Lahir..." value={regTempatLahir} onChange={e => setRegTempatLahir(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
             <div style={{ display: 'flex', gap: '6px' }}>
-              <input type="text" placeholder="Tgl (1-31)" value={regTanggalLahir} onChange={e => setRegTanggalLahir(e.target.value)} style={{ width: '30%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-              <select value={regBulanLahir} onChange={e => setRegBulanLahir(e.target.value)} style={{ width: '40%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
+              <input type="text" placeholder="Tgl (1-31)" value={regTanggalLahir} onChange={e => setRegTanggalLahir(e.target.value)} style={{ width: '30%', padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+              <select value={regBulanLahir} onChange={e => setRegBulanLahir(e.target.value)} style={{ width: '40%', padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }}>
                 <option value="">Bulan</option>
                 <option value="Januari">Januari</option>
                 <option value="Februari">Februari</option>
@@ -452,23 +453,23 @@ export default function PortalKaryawan() {
                 <option value="November">November</option>
                 <option value="Desember">Desember</option>
               </select>
-              <input type="text" placeholder="Tahun" value={regTahunLahir} onChange={e => setRegTahunLahir(e.target.value)} style={{ width: '30%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+              <input type="text" placeholder="Tahun" value={regTahunLahir} onChange={e => setRegTahunLahir(e.target.value)} style={{ width: '30%', padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
             </div>
-            <input type="email" placeholder="Alamat Gmail Admin..." value={regEmail} onChange={e => setRegEmail(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <input type="password" placeholder="Password / PIN Admin..." value={regPin} onChange={e => setRegPin(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <button type="submit" disabled={loading} style={{ background: '#0f172a', color: '#fff', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>{loading ? 'Menyimpan...' : 'Daftar Admin ke Database'}</button>
-            <span onClick={() => setSubView('login')} style={{ color: '#64748b', cursor: 'pointer', fontSize: '13px' }}>← Kembali ke Login</span>
+            <input type="email" placeholder="Alamat Gmail Admin..." value={regEmail} onChange={e => setRegEmail(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+            <input type="password" placeholder="Password / PIN Admin..." value={regPin} onChange={e => setRegPin(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+            <button type="submit" disabled={loading} style={{ background: '#38bdf8', color: '#0f172a', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>{loading ? 'Menyimpan...' : 'Daftar Admin ke Database'}</button>
+            <span onClick={() => setSubView('login')} style={{ color: '#94a3b8', cursor: 'pointer', fontSize: '13px' }}>← Kembali ke Login</span>
           </form>
         </div>
       )}
 
       {subView === 'lupa' && (
         <div>
-          <h2 style={{ color: '#0f172a', marginBottom: '16px' }}>🔄 Pemulihan PIN via Gmail</h2>
+          <h2 style={{ color: '#fff', marginBottom: '16px' }}>🔄 Pemulihan PIN via Gmail</h2>
           <form onSubmit={handleLupaPassword} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '360px' }}>
-            <input type="email" placeholder="Masukkan Gmail terdaftar..." value={lupaEmail} onChange={e => setLupaEmail(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <button type="submit" disabled={loading} style={{ background: '#0284c7', color: '#fff', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>Kirim Pemulihan</button>
-            <span onClick={() => setSubView('login')} style={{ color: '#64748b', cursor: 'pointer', fontSize: '13px' }}>← Kembali ke Login</span>
+            <input type="email" placeholder="Masukkan Gmail terdaftar..." value={lupaEmail} onChange={e => setLupaEmail(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }} />
+            <button type="submit" disabled={loading} style={{ background: '#38bdf8', color: '#0f172a', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>Kirim Pemulihan</button>
+            <span onClick={() => setSubView('login')} style={{ color: '#94a3b8', cursor: 'pointer', fontSize: '13px' }}>← Kembali ke Login</span>
           </form>
         </div>
       )}
@@ -476,29 +477,29 @@ export default function PortalKaryawan() {
       {karyawanLogin && (
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h2 style={{ color: '#0f172a', margin: 0 }}>Halo, {karyawanLogin.nama}</h2>
+            <h2 style={{ color: '#fff', margin: 0 }}>Halo, {karyawanLogin.nama}</h2>
             <button onClick={handleLogout} style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>Keluar (Logout)</button>
           </div>
-          <p style={{ fontSize: '13px', color: '#64748b' }}>Lokasi GPS: <strong>{lokasiUser}</strong></p>
+          <p style={{ fontSize: '13px', color: '#cbd5e1' }}>Lokasi GPS: <strong>{lokasiUser}</strong></p>
           
           <div style={{ display: 'flex', gap: '10px', margin: '15px 0' }}>
-            <button onClick={() => setSubView('dashboard_kry')} style={{ background: '#0f172a', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer', fontSize: '13px' }}>Absensi & Selfie</button>
-            <button onClick={() => setSubView('slip_gaji')} style={{ background: '#059669', color: '#fff', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer', fontSize: '13px' }}>Unduh Slip Gaji</button>
+            <button onClick={() => setSubView('dashboard_kry')} style={{ background: '#38bdf8', color: '#0f172a', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer', fontSize: '13px', fontWeight: 'bold' }}>Absensi & Selfie</button>
+            <button onClick={() => setSubView('slip_gaji')} style={{ background: '#34d399', color: '#0f172a', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer', fontSize: '13px', fontWeight: 'bold' }}>Unduh Slip Gaji</button>
           </div>
 
           {subView === 'dashboard_kry' && (
             <form onSubmit={handleKirimAbsen} style={{ display: 'flex', flexDirection: 'column', gap: '14px', maxWidth: '360px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '6px', color: '#0f172a' }}>Jenis Absen:</label>
-                <select value={jenisAbsen} onChange={e => setJenisAbsen(e.target.value as 'Masuk' | 'Pulang')} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '6px', color: '#fff' }}>Jenis Absen:</label>
+                <select value={jenisAbsen} onChange={e => setJenisAbsen(e.target.value as 'Masuk' | 'Pulang')} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }}>
                   <option value="Masuk">🟢 Absen Masuk</option>
                   <option value="Pulang">🔴 Absen Pulang</option>
                 </select>
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '6px', color: '#0f172a' }}>Status Kehadiran:</label>
-                <select value={statusAbsen} onChange={e => setStatusAbsen(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: 'bold', marginBottom: '6px', color: '#fff' }}>Status Kehadiran:</label>
+                <select value={statusAbsen} onChange={e => setStatusAbsen(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(15,23,42,0.8)', color: '#fff' }}>
                   <option value="Hadir">Hadir</option>
                   <option value="Terlambat">Terlambat</option>
                   <option value="Sakit">Sakit</option>
@@ -506,22 +507,22 @@ export default function PortalKaryawan() {
                 </select>
               </div>
 
-              <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', textAlign: 'center', border: '1px dashed #cbd5e1' }}>
-                <p style={{ fontWeight: 'bold', fontSize: '13px', marginBottom: '8px', color: '#0f172a' }}>📸 Foto Selfie Kehadiran:</p>
+              <div style={{ background: 'rgba(15, 23, 42, 0.7)', padding: '16px', borderRadius: '12px', textAlign: 'center', border: '1px dashed rgba(255,255,255,0.3)' }}>
+                <p style={{ fontWeight: 'bold', fontSize: '13px', marginBottom: '8px', color: '#fff' }}>📸 Foto Selfie Kehadiran:</p>
                 <video ref={videoRef} autoPlay playsInline muted style={{ width: '100%', height: '140px', background: '#000', borderRadius: '8px', objectFit: 'cover' }} />
-                {fotoSnapshot && <p style={{ color: '#10b981', fontSize: '12px', fontWeight: 'bold', margin: '6px 0' }}>✔ Foto Siap Disimpan</p>}
-                <button type="button" onClick={ambilFoto} style={{ marginTop: '8px', background: '#0284c7', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontWeight: 'bold' }}>Ambil Foto Selfie</button>
+                {fotoSnapshot && <p style={{ color: '#34d399', fontSize: '12px', fontWeight: 'bold', margin: '6px 0' }}>✔ Foto Siap Disimpan</p>}
+                <button type="button" onClick={ambilFoto} style={{ marginTop: '8px', background: '#38bdf8', color: '#0f172a', border: 'none', padding: '6px 12px', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontWeight: 'bold' }}>Ambil Foto Selfie</button>
               </div>
               <canvas ref={canvasRef} style={{ display: 'none' }} />
-              <button type="submit" style={{ background: '#0f172a', color: '#fff', border: 'none', padding: '12px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>Kirim Absen Sekarang</button>
+              <button type="submit" style={{ background: '#34d399', color: '#0f172a', border: 'none', padding: '12px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>Kirim Absen Sekarang</button>
             </form>
           )}
 
           {subView === 'slip_gaji' && (
-            <div style={{ background: '#f8fafc', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0', maxWidth: '400px' }}>
-              <h3 style={{ margin: '0 0 10px 0', fontSize: '16px', color: '#0f172a' }}>Slip Gaji Bulanan</h3>
-              <p style={{ fontSize: '14px', color: '#475569' }}>Gaji Pokok: Rp {(karyawanLogin.gaji_pokok || 4500000).toLocaleString('id-ID')}</p>
-              <button onClick={handleDownloadSlip} style={{ background: '#059669', color: '#fff', border: 'none', padding: '10px 16px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}>Download Slip Gaji (PDF)</button>
+            <div style={{ background: 'rgba(15, 23, 42, 0.75)', padding: '20px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.2)', maxWidth: '400px' }}>
+              <h3 style={{ margin: '0 0 10px 0', fontSize: '16px', color: '#fff' }}>Slip Gaji Bulanan</h3>
+              <p style={{ fontSize: '14px', color: '#cbd5e1' }}>Gaji Pokok: Rp {(karyawanLogin.gaji_pokok || 4500000).toLocaleString('id-ID')}</p>
+              <button onClick={handleDownloadSlip} style={{ background: '#34d399', color: '#0f172a', border: 'none', padding: '10px 16px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px' }}>Download Slip Gaji (PDF)</button>
             </div>
           )}
         </div>
