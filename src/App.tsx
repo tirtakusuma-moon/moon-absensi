@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Navbar from './Navbar';
+import Navbar from './components/common/Navbar';
 import PortalKaryawan from './components/karyawan/PortalKaryawan';
 import DashboardAdmin from './components/admin/DashboardAdmin';
 
