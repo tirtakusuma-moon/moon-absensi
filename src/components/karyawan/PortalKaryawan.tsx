@@ -23,7 +23,8 @@ export default function PortalKaryawan() {
   const [karyawanLogin, setKaryawanLogin] = useState<Karyawan | null>(null);
 
   const [regId, setRegId] = useState('');
-  const [regNama, setRegNama] = useState('');
+  const [regNamaDepan, setRegNamaDepan] = useState('');
+  const [regNamaBelakang, setRegNamaBelakang] = useState('');
   const [regJabatan, setRegJabatan] = useState('');
   const [regEmail, setRegEmail] = useState('');
   const [regPin, setRegPin] = useState('');
@@ -31,6 +32,7 @@ export default function PortalKaryawan() {
   const [regTanggalLahir, setRegTanggalLahir] = useState('');
   const [regBulanLahir, setRegBulanLahir] = useState('');
   const [regTahunLahir, setRegTahunLahir] = useState('');
+  const [regGender, setRegGender] = useState('');
 
   const [loading, setLoading] = useState(false);
   const [lupaEmail, setLupaEmail] = useState('');
@@ -119,8 +121,9 @@ export default function PortalKaryawan() {
 
   const handleDaftarKaryawan = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!regId || !regNama || !regJabatan || !regEmail || !regPin || !regTempatLahir || !regTanggalLahir || !regBulanLahir || !regTahunLahir) {
-      alert('Semua kolom wajib diisi, termasuk tempat, tanggal, bulan, dan tahun lahir!');
+    const namaLengkap = `${regNamaDepan} ${regNamaBelakang}`.trim();
+    if (!regId || !regNamaDepan || !regJabatan || !regEmail || !regPin || !regTempatLahir || !regTanggalLahir || !regBulanLahir || !regTahunLahir) {
+      alert('Semua kolom wajib diisi, termasuk nama, tempat, tanggal, bulan, tahun lahir, dan PIN!');
       return;
     }
     if (!regEmail.includes('@gmail.com')) {
@@ -128,7 +131,7 @@ export default function PortalKaryawan() {
       return;
     }
 
-    const { data: existing } = await supabase.from('karyawan').select('*').or(`email.eq.${regEmail},nama.eq.${regNama}`);
+    const { data: existing } = await supabase.from('karyawan').select('*').or(`email.eq.${regEmail},nama.eq.${namaLengkap}`);
     if (existing && existing.length > 0) {
       alert('Pendaftaran ditolak! Nama atau Email tersebut sudah terdaftar di sistem.');
       return;
@@ -138,7 +141,7 @@ export default function PortalKaryawan() {
     const { error } = await supabase.from('karyawan').insert([
       { 
         id_karyawan: regId, 
-        nama: regNama, 
+        nama: namaLengkap, 
         jabatan: regJabatan, 
         email: regEmail, 
         pin: regPin, 
@@ -161,8 +164,9 @@ export default function PortalKaryawan() {
 
   const handleDaftarAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!regNama || !regEmail || !regPin || !regTempatLahir || !regTanggalLahir || !regBulanLahir || !regTahunLahir) {
-      alert('Semua kolom wajib diisi, termasuk tempat, tanggal, bulan, dan tahun lahir!');
+    const namaLengkap = `${regNamaDepan} ${regNamaBelakang}`.trim();
+    if (!regNamaDepan || !regEmail || !regPin || !regTempatLahir || !regTanggalLahir || !regBulanLahir || !regTahunLahir) {
+      alert('Semua kolom wajib diisi, termasuk nama, tempat, tanggal, bulan, tahun lahir, dan PIN!');
       return;
     }
     if (!regEmail.includes('@gmail.com')) {
@@ -170,7 +174,7 @@ export default function PortalKaryawan() {
       return;
     }
 
-    const { data: existing } = await supabase.from('karyawan').select('*').or(`email.eq.${regEmail},nama.eq.${regNama}`);
+    const { data: existing } = await supabase.from('karyawan').select('*').or(`email.eq.${regEmail},nama.eq.${namaLengkap}`);
     if (existing && existing.length > 0) {
       alert('Pendaftaran Admin ditolak! Nama atau Email tersebut sudah terdaftar di database.');
       return;
@@ -180,7 +184,7 @@ export default function PortalKaryawan() {
     const { error } = await supabase.from('karyawan').insert([
       { 
         id_karyawan: 'ADM-' + Math.floor(1000 + Math.random() * 9000), 
-        nama: regNama, 
+        nama: namaLengkap, 
         jabatan: 'Administrator HR', 
         email: regEmail, 
         pin: regPin,
@@ -349,16 +353,25 @@ export default function PortalKaryawan() {
       )}
 
       {subView === 'daftar_kry' && (
-        <div>
-          <h2 style={{ color: '#0f172a', marginBottom: '16px' }}>✍️ Pendaftaran Akun Karyawan</h2>
-          <form onSubmit={handleDaftarKaryawan} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '360px' }}>
-            <input type="text" placeholder="ID Karyawan / NIP..." value={regId} onChange={e => setRegId(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <input type="text" placeholder="Nama Lengkap..." value={regNama} onChange={e => setRegNama(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <input type="text" placeholder="Jabatan..." value={regJabatan} onChange={e => setRegJabatan(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <input type="text" placeholder="Tempat Lahir..." value={regTempatLahir} onChange={e => setRegTempatLahir(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <div style={{ display: 'flex', gap: '6px' }}>
-              <input type="text" placeholder="Tgl (1-31)" value={regTanggalLahir} onChange={e => setRegTanggalLahir(e.target.value)} style={{ width: '30%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-              <select value={regBulanLahir} onChange={e => setRegBulanLahir(e.target.value)} style={{ width: '40%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
+        <div style={{ background: '#fff', padding: '24px', borderRadius: '12px', maxWidth: '420px', margin: '0 auto', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+          <h2 style={{ color: '#1c1e21', marginBottom: '4px', fontSize: '24px' }}>Mulai Buat Akun Karyawan</h2>
+          <p style={{ color: '#606770', fontSize: '15px', marginBottom: '16px' }}>Cepat dan mudah.</p>
+          <form onSubmit={handleDaftarKaryawan} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <input type="text" placeholder="Nama depan" value={regNamaDepan} onChange={e => setRegNamaDepan(e.target.value)} style={{ flex: 1, padding: '10px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#f5f6f7' }} />
+              <input type="text" placeholder="Nama belakang" value={regNamaBelakang} onChange={e => setRegNamaBelakang(e.target.value)} style={{ flex: 1, padding: '10px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#f5f6f7' }} />
+            </div>
+            <input type="text" placeholder="ID Karyawan / NIP..." value={regId} onChange={e => setRegId(e.target.value)} style={{ padding: '10px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#f5f6f7' }} />
+            <input type="text" placeholder="Jabatan..." value={regJabatan} onChange={e => setRegJabatan(e.target.value)} style={{ padding: '10px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#f5f6f7' }} />
+            <input type="text" placeholder="Tempat Lahir..." value={regTempatLahir} onChange={e => setRegTempatLahir(e.target.value)} style={{ padding: '10px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#f5f6f7' }} />
+            
+            <label style={{ fontSize: '12px', color: '#606770', marginTop: '4px', fontWeight: 'bold' }}>Tanggal lahir</label>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <select value={regTanggalLahir} onChange={e => setRegTanggalLahir(e.target.value)} style={{ flex: 1, padding: '8px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#fff' }}>
+                <option value="">Hari</option>
+                {Array.from({length: 31}, (_, i) => <option key={i+1} value={i+1}>{i+1}</option>)}
+              </select>
+              <select value={regBulanLahir} onChange={e => setRegBulanLahir(e.target.value)} style={{ flex: 1, padding: '8px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#fff' }}>
                 <option value="">Bulan</option>
                 <option value="Januari">Januari</option>
                 <option value="Februari">Februari</option>
@@ -373,25 +386,51 @@ export default function PortalKaryawan() {
                 <option value="November">November</option>
                 <option value="Desember">Desember</option>
               </select>
-              <input type="text" placeholder="Tahun" value={regTahunLahir} onChange={e => setRegTahunLahir(e.target.value)} style={{ width: '30%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+              <select value={regTahunLahir} onChange={e => setRegTahunLahir(e.target.value)} style={{ flex: 1, padding: '8px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#fff' }}>
+                <option value="">Tahun</option>
+                {Array.from({length: 50}, (_, i) => <option key={2026-i} value={2026-i}>{2026-i}</option>)}
+              </select>
             </div>
-            <input type="email" placeholder="Alamat Gmail..." value={regEmail} onChange={e => setRegEmail(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <input type="password" maxLength={6} placeholder="Buat PIN (6 Digit)..." value={regPin} onChange={e => setRegPin(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <button type="submit" disabled={loading} style={{ background: '#059669', color: '#fff', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>{loading ? 'Menyimpan...' : 'Daftar Karyawan'}</button>
-            <span onClick={() => setSubView('login')} style={{ color: '#64748b', cursor: 'pointer', fontSize: '13px' }}>← Kembali ke Login</span>
+
+            <label style={{ fontSize: '12px', color: '#606770', marginTop: '4px', fontWeight: 'bold' }}>Jenis kelamin</label>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <label onClick={() => setRegGender('Perempuan')} style={{ flex: 1, border: '1px solid #ccd0d5', padding: '8px', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '14px', cursor: 'pointer', background: regGender === 'Perempuan' ? '#e7f3ff' : '#fff' }}>
+                Perempuan <input type="radio" name="gender" checked={regGender === 'Perempuan'} onChange={() => setRegGender('Perempuan')} />
+              </label>
+              <label onClick={() => setRegGender('Laki-laki')} style={{ flex: 1, border: '1px solid #ccd0d5', padding: '8px', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '14px', cursor: 'pointer', background: regGender === 'Laki-laki' ? '#e7f3ff' : '#fff' }}>
+                Laki-laki <input type="radio" name="gender" checked={regGender === 'Laki-laki'} onChange={() => setRegGender('Laki-laki')} />
+              </label>
+            </div>
+
+            <input type="email" placeholder="Alamat Gmail..." value={regEmail} onChange={e => setRegEmail(e.target.value)} style={{ padding: '10px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#f5f6f7', marginTop: '4px' }} />
+            <input type="password" maxLength={6} placeholder="Buat PIN (6 Digit)..." value={regPin} onChange={e => setRegPin(e.target.value)} style={{ padding: '10px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#f5f6f7' }} />
+            
+            <button type="submit" disabled={loading} style={{ background: '#00a400', color: '#fff', border: 'none', padding: '10px', borderRadius: '6px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer', marginTop: '10px' }}>
+              {loading ? 'Menyimpan...' : 'Daftar Karyawan'}
+            </button>
+            <span onClick={() => setSubView('login')} style={{ color: '#1877f2', cursor: 'pointer', fontSize: '14px', textAlign: 'center', marginTop: '8px', fontWeight: 'bold' }}>Saya sudah punya akun</span>
           </form>
         </div>
       )}
 
       {subView === 'daftar_adm' && (
-        <div>
-          <h2 style={{ color: '#0f172a', marginBottom: '16px' }}>✍️ Pendaftaran Akun Admin (Database)</h2>
-          <form onSubmit={handleDaftarAdmin} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '360px' }}>
-            <input type="text" placeholder="Nama Lengkap Admin..." value={regNama} onChange={e => setRegNama(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <input type="text" placeholder="Tempat Lahir..." value={regTempatLahir} onChange={e => setRegTempatLahir(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <div style={{ display: 'flex', gap: '6px' }}>
-              <input type="text" placeholder="Tgl (1-31)" value={regTanggalLahir} onChange={e => setRegTanggalLahir(e.target.value)} style={{ width: '30%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-              <select value={regBulanLahir} onChange={e => setRegBulanLahir(e.target.value)} style={{ width: '40%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
+        <div style={{ background: '#fff', padding: '24px', borderRadius: '12px', maxWidth: '420px', margin: '0 auto', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+          <h2 style={{ color: '#1c1e21', marginBottom: '4px', fontSize: '24px' }}>Mulai Buat Akun Admin</h2>
+          <p style={{ color: '#606770', fontSize: '15px', marginBottom: '16px' }}>Cepat dan mudah.</p>
+          <form onSubmit={handleDaftarAdmin} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <input type="text" placeholder="Nama depan" value={regNamaDepan} onChange={e => setRegNamaDepan(e.target.value)} style={{ flex: 1, padding: '10px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#f5f6f7' }} />
+              <input type="text" placeholder="Nama belakang" value={regNamaBelakang} onChange={e => setRegNamaBelakang(e.target.value)} style={{ flex: 1, padding: '10px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#f5f6f7' }} />
+            </div>
+            <input type="text" placeholder="Tempat Lahir..." value={regTempatLahir} onChange={e => setRegTempatLahir(e.target.value)} style={{ padding: '10px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#f5f6f7' }} />
+            
+            <label style={{ fontSize: '12px', color: '#606770', marginTop: '4px', fontWeight: 'bold' }}>Tanggal lahir</label>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <select value={regTanggalLahir} onChange={e => setRegTanggalLahir(e.target.value)} style={{ flex: 1, padding: '8px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#fff' }}>
+                <option value="">Hari</option>
+                {Array.from({length: 31}, (_, i) => <option key={i+1} value={i+1}>{i+1}</option>)}
+              </select>
+              <select value={regBulanLahir} onChange={e => setRegBulanLahir(e.target.value)} style={{ flex: 1, padding: '8px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#fff' }}>
                 <option value="">Bulan</option>
                 <option value="Januari">Januari</option>
                 <option value="Februari">Februari</option>
@@ -406,23 +445,40 @@ export default function PortalKaryawan() {
                 <option value="November">November</option>
                 <option value="Desember">Desember</option>
               </select>
-              <input type="text" placeholder="Tahun" value={regTahunLahir} onChange={e => setRegTahunLahir(e.target.value)} style={{ width: '30%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+              <select value={regTahunLahir} onChange={e => setRegTahunLahir(e.target.value)} style={{ flex: 1, padding: '8px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#fff' }}>
+                <option value="">Tahun</option>
+                {Array.from({length: 50}, (_, i) => <option key={2026-i} value={2026-i}>{2026-i}</option>)}
+              </select>
             </div>
-            <input type="email" placeholder="Alamat Gmail Admin..." value={regEmail} onChange={e => setRegEmail(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <input type="password" placeholder="Password / PIN Admin..." value={regPin} onChange={e => setRegPin(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <button type="submit" disabled={loading} style={{ background: '#0f172a', color: '#fff', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>{loading ? 'Menyimpan...' : 'Daftar Admin ke Database'}</button>
-            <span onClick={() => setSubView('login')} style={{ color: '#64748b', cursor: 'pointer', fontSize: '13px' }}>← Kembali ke Login</span>
+
+            <label style={{ fontSize: '12px', color: '#606770', marginTop: '4px', fontWeight: 'bold' }}>Jenis kelamin</label>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <label onClick={() => setRegGender('Perempuan')} style={{ flex: 1, border: '1px solid #ccd0d5', padding: '8px', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '14px', cursor: 'pointer', background: regGender === 'Perempuan' ? '#e7f3ff' : '#fff' }}>
+                Perempuan <input type="radio" name="genderAdm" checked={regGender === 'Perempuan'} onChange={() => setRegGender('Perempuan')} />
+              </label>
+              <label onClick={() => setRegGender('Laki-laki')} style={{ flex: 1, border: '1px solid #ccd0d5', padding: '8px', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '14px', cursor: 'pointer', background: regGender === 'Laki-laki' ? '#e7f3ff' : '#fff' }}>
+                Laki-laki <input type="radio" name="genderAdm" checked={regGender === 'Laki-laki'} onChange={() => setRegGender('Laki-laki')} />
+              </label>
+            </div>
+
+            <input type="email" placeholder="Alamat Gmail Admin..." value={regEmail} onChange={e => setRegEmail(e.target.value)} style={{ padding: '10px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#f5f6f7', marginTop: '4px' }} />
+            <input type="password" maxLength={6} placeholder="Password / PIN Admin (6 Digit)..." value={regPin} onChange={e => setRegPin(e.target.value)} style={{ padding: '10px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#f5f6f7' }} />
+            
+            <button type="submit" disabled={loading} style={{ background: '#0f172a', color: '#fff', border: 'none', padding: '10px', borderRadius: '6px', fontWeight: 'bold', fontSize: '16px', cursor: 'pointer', marginTop: '10px' }}>
+              {loading ? 'Menyimpan...' : 'Daftar Admin ke Database'}
+            </button>
+            <span onClick={() => setSubView('login')} style={{ color: '#1877f2', cursor: 'pointer', fontSize: '14px', textAlign: 'center', marginTop: '8px', fontWeight: 'bold' }}>Saya sudah punya akun</span>
           </form>
         </div>
       )}
 
       {subView === 'lupa' && (
-        <div>
-          <h2 style={{ color: '#0f172a', marginBottom: '16px' }}>🔄 Pemulihan PIN via Gmail</h2>
-          <form onSubmit={handleLupaPassword} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '360px' }}>
-            <input type="email" placeholder="Masukkan Gmail terdaftar..." value={lupaEmail} onChange={e => setLupaEmail(e.target.value)} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-            <button type="submit" disabled={loading} style={{ background: '#0284c7', color: '#fff', border: 'none', padding: '10px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>Kirim Pemulihan</button>
-            <span onClick={() => setSubView('login')} style={{ color: '#64748b', cursor: 'pointer', fontSize: '13px' }}>← Kembali ke Login</span>
+        <div style={{ background: '#fff', padding: '24px', borderRadius: '12px', maxWidth: '420px', margin: '0 auto', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+          <h2 style={{ color: '#1c1e21', marginBottom: '8px', fontSize: '20px' }}>🔄 Pemulihan PIN via Gmail</h2>
+          <form onSubmit={handleLupaPassword} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <input type="email" placeholder="Masukkan Gmail terdaftar..." value={lupaEmail} onChange={e => setLupaEmail(e.target.value)} style={{ padding: '10px', borderRadius: '6px', border: '1px solid #ccd0d5', background: '#f5f6f7' }} />
+            <button type="submit" disabled={loading} style={{ background: '#0284c7', color: '#fff', border: 'none', padding: '10px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>Kirim Pemulihan</button>
+            <span onClick={() => setSubView('login')} style={{ color: '#1877f2', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', textAlign: 'center' }}>← Kembali ke Login</span>
           </form>
         </div>
       )}
