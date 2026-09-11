@@ -1,18 +1,26 @@
 import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../supabaseClient';
 
-interface Karyawan {
-  id: string;
-  id_karyawan: string;
-  nama: string;
-  jabatan: string;
-  email?: string;
-  pin?: string;
-  tempat_lahir?: string;
-  tanggal_lahir?: string;
-  bulan?: string;
-  tahun_lahir?: string;
-  gaji_pokok?: number;
+const { error } = await supabase.from('karyawan').insert([
+  { 
+    id_karyawan: regId, 
+    nama: regNama, 
+    jabatan: regJabatan, 
+    email: regEmail, 
+    pin: regPin, 
+    tempat_lahir: regTempatLahir,
+    tanggal_lahir: regTanggalLahir,
+    bulan: regBulanLahir,
+    tahun_lahir: regTahunLahir,
+    nik_ktp: regNik,                  // <--- Tambahkan
+    nama_ibu_kandung: regIbu,         // <--- Tambahkan
+    no_telp: regTelp,                 // <--- Tambahkan
+    alamat_rumah: regAlamat,          // <--- Tambahkan
+    nama_rekening: regBank,           // <--- Tambahkan
+    no_rekening: regNoRek,            // <--- Tambahkan
+    gaji_pokok: 4500000 
+  }
+]);
 }
 
 export default function PortalKaryawan() {
